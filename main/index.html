@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Animated QR Code Generator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        input[type="text"] {
+            width: 80%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        input[type="text"]:focus {
+            border-color: #2a5298;
+            outline: none;
+            box-shadow: 0 0 5px rgba(42, 82, 152, 0.5);
+        }
+
+        #transferBtn {
+            display: none;
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+            background: #2a5298;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+
+        button:hover {
+            background: #1e3c72;
+            transform: scale(1.05);
+        }
+
+
+        #qrcode {
+            margin-top: 20px;
+            display: inline-block;
+            transition: all 0.5s ease;
+            opacity: 1;
+        }
+
+        
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>QR Code Generator</h1>
+    <label for="qrInput"></label><input type="text" id="qrInput" placeholder="Enter text or URL">
+    <br>
+    <button id="generateBtn">Generate QR Code</button>
+    <button id="transferBtn">Transfer QR Code</button>
+    <div id="qrcode"></div>
+
+</div>
+
+<!-- Include QRCode.js library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+    // Get references to DOM elements
+    const generateBtn = document.getElementById('generateBtn');
+    const qrInput = document.getElementById('qrInput');
+    const qrCodeContainer = document.getElementById('qrcode');
+    const transferBtn = document.getElementById('transferBtn');
+
+    function generateQRCode() {
+        const text = qrInput.value.trim();
+        if (!text) {
+            alert('Please enter text or a URL.');
+            return;
+        }
+
+        qrCodeContainer.innerHTML = '';
+        qrCodeContainer.classList.remove('show');
+
+        new QRCode(qrCodeContainer, {
+            text: text,
+            width: 200,
+            height: 200,
+            colorDark : "#000000",
+            colorLight : "#ffffff",
+            correctLevel : QRCode.CorrectLevel.H
+        });
+
+        // Trigger the CSS animation after a short delay to allow rendering
+        setTimeout(() => {
+            qrCodeContainer.classList.add('show');
+            transferBtn.style.display = 'block';
+        }, 100);
+    }
+
+
+    generateBtn.addEventListener('click', generateQRCode);
+
+    qrInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            generateQRCode();
+        }
+    });
+
+
+    function transferQRCode() {
+        const qrCanvas = qrCodeContainer.querySelector("canvas");
+
+        if (qrCanvas) {
+            const qrImage = qrCanvas.toDataURL("image/png");
+
+            const downloadLink = document.createElement("a");
+            downloadLink.href = qrImage;
+            downloadLink.download = "qrcode.png";
+            downloadLink.click();
+        } else {
+            alert("No QR code found. Please generate one first.");
+        }
+    }
+
+    transferBtn.addEventListener('click', transferQRCode);
+
+</script>
+</body>
+</html>
