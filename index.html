@@ -87,12 +87,16 @@
         @media (max-width: 480px) {
             .container {
                 padding: 25px;
-                width: 95%;      
+                width: 95%;
                 max-width: none;
                 margin: 0 auto;
+                text-align: center;
             }
             input[type="text"] {
                 width: 100%;
+            }
+            #qrcode {
+                margin: 20px auto 0;
             }
         }
     </style>
@@ -119,6 +123,8 @@
 
     function generateQRCode() {
         const text = qrInput.value.trim();
+        const qrSize = 200;
+
         if (!text) {
             alert('Please enter text or a URL.');
             return;
@@ -126,9 +132,6 @@
 
         qrCodeContainer.innerHTML = '';
         qrCodeContainer.classList.remove('show');
-
-        const isMobile = window.innerWidth <= 480;
-        const qrSize = isMobile ? 300 : 200;
 
         new QRCode(qrCodeContainer, {
             text: text,
