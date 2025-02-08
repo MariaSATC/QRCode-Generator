@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Animated QR Code Generator</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <style>
@@ -18,18 +19,16 @@
             align-items: center;
             justify-content: center;
         }
-
         .container {
             background: rgba(255, 255, 255, 0.95);
             border-radius: 10px;
             padding: 30px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
             text-align: center;
-            max-width: 400px;
             width: 90%;
+            max-width: 400px;
             animation: fadeInUp 1s ease-out;
         }
-
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -40,12 +39,10 @@
                 transform: translateY(0);
             }
         }
-
         h1 {
             margin-bottom: 20px;
             color: #333;
         }
-
         input[type="text"] {
             width: 80%;
             padding: 10px;
@@ -60,11 +57,9 @@
             outline: none;
             box-shadow: 0 0 5px rgba(42, 82, 152, 0.5);
         }
-
         #transferBtn {
             display: none;
         }
-
         button {
             display: block;
             width: 100%;
@@ -78,13 +73,10 @@
             cursor: pointer;
             transition: background 0.3s ease, transform 0.2s ease;
         }
-
         button:hover {
             background: #1e3c72;
             transform: scale(1.05);
         }
-
-
         #qrcode {
             margin-top: 20px;
             display: inline-block;
@@ -92,18 +84,28 @@
             opacity: 1;
         }
 
-
+        @media (max-width: 480px) {
+            .container {
+                padding: 25px;
+                width: 95%;      
+                max-width: none;
+                margin: 0 auto;
+            }
+            input[type="text"] {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
 <div class="container">
     <h1>QR Code Generator</h1>
-    <label for="qrInput"></label><input type="text" id="qrInput" placeholder="Enter text or URL">
+    <label for="qrInput"></label>
+    <input type="text" id="qrInput" placeholder="Enter text or URL">
     <br>
     <button id="generateBtn">Generate QR Code</button>
     <button id="transferBtn">Transfer QR Code</button>
     <div id="qrcode"></div>
-
 </div>
 
 <!-- Include QRCode.js library -->
@@ -125,10 +127,13 @@
         qrCodeContainer.innerHTML = '';
         qrCodeContainer.classList.remove('show');
 
+        const isMobile = window.innerWidth <= 480;
+        const qrSize = isMobile ? 300 : 200;
+
         new QRCode(qrCodeContainer, {
             text: text,
-            width: 200,
-            height: 200,
+            width: qrSize,
+            height: qrSize,
             colorDark : "#000000",
             colorLight : "#ffffff",
             correctLevel : QRCode.CorrectLevel.H
@@ -141,7 +146,6 @@
         }, 100);
     }
 
-
     generateBtn.addEventListener('click', generateQRCode);
 
     qrInput.addEventListener('keypress', (e) => {
@@ -150,13 +154,10 @@
         }
     });
 
-
     function transferQRCode() {
         const qrCanvas = qrCodeContainer.querySelector("canvas");
-
         if (qrCanvas) {
             const qrImage = qrCanvas.toDataURL("image/png");
-
             const downloadLink = document.createElement("a");
             downloadLink.href = qrImage;
             downloadLink.download = "qrcode.png";
@@ -167,7 +168,6 @@
     }
 
     transferBtn.addEventListener('click', transferQRCode);
-
 </script>
 </body>
 </html>
